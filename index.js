@@ -5,7 +5,14 @@ const app = express();
 const PORT = 3000;
 
 app.get("/scrape", async (req, res) => {
-  const { username } = req.query;
+  let username = req.query.username;
+if (username.includes("instagram.com")) {
+  const match = username.match(/instagram\.com\/([^\/\?\&]+)/);
+  username = match ? match[1] : null;
+}
+if (!username) {
+  return res.status(400).json({ error: "Invalid Instagram URL or username." });
+}
 
   if (!username) {
     return res.status(400).json({ error: "Missing Instagram username" });
